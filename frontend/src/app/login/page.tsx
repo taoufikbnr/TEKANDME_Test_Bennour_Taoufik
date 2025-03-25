@@ -27,9 +27,8 @@ const Login = () => {
             password: userInfo.password,
           });
     
-          localStorage.setItem('jwt', response.data.jwt);
+          localStorage.setItem('token', response.data.jwt);
     
-        //   // Redirect to the task manager or dashboard
           router.push('/');
         } catch (err) {
           console.error('Login error:', err.response.data);

@@ -29,6 +29,14 @@ const TaskList = () => {
           dueDate: '2025-03-30',
           completed: false,
         },
+        {
+          id: 2,
+          title: 'Write blog post',
+          description: 'Write a new post about React hooks.',
+          startDate: '2025-03-22',
+          dueDate: '2025-03-30',
+          completed: false,
+        },
       ]);
       const togglecompleted = (id: number) => {
         setTasks(tasks.map((task) =>

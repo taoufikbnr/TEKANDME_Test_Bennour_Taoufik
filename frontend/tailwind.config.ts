@@ -24,6 +24,7 @@ const config = {
       colors: {
         blue: {
           100: '#dae3ef',
+          200: '#0c8ce9',
         },
         pink: {
           100: '#f3ebea',

@@ -1,0 +1,4 @@
+.react-datepicker__day--selected {
+    background-color: red !important; /* Change to your desired color */
+    color: white !important; /* Change text color of selected date */
+  }

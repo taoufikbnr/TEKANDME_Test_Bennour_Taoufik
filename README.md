@@ -21,3 +21,7 @@ Authentication: JWT (JSON Web Token)
 
 UI Library: Material UI (MUI)
 
+Login : 
+tawdev
+Admin111²
+

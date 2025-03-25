@@ -1,5 +1,6 @@
+"use client"
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BASE_URL, config } from '../utils/utils';
 import { format } from 'date-fns';
 
@@ -8,10 +9,15 @@ const AddTask = ({userId,date}:any) => {
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
  
-  const token = localStorage.getItem('token');
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedToken = localStorage.getItem('token'); 
+    }
+  }, []); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
     const taskData = {
       data:{  
@@ -22,7 +28,6 @@ const AddTask = ({userId,date}:any) => {
         startDate: format(new Date(date[0].toLocaleDateString()), 'yyyy-MM-dd') ,
         endDate: format(new Date(date[1].toLocaleDateString()), 'yyyy-MM-dd')}
     };
-    console.log(taskData);
     
     try {
       const response = await axios.post(

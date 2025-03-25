@@ -1,9 +1,14 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowDropDown, ArrowDropUp, CheckCircle, CheckCircleOutline, Delete, DeleteOutline, EditOutlined, Search, SearchOffOutlined, SearchOutlined } from '@mui/icons-material';
+import axios from "axios";
+import { BASE_URL } from "../utils/utils";
+import { useUser } from "../context/AuthContext";
 
-const TaskList = () => {
+const TaskList = ({userInfo}) => {
+
+
     type Task = {
         id: number;
         title: string;
@@ -12,32 +17,32 @@ const TaskList = () => {
         dueDate: string;
         completed: boolean;
       };
-    const [tasks, setTasks] = useState<Task[]>([
-        {
-          id: 1,
-          title: 'Complete React project',
-          description: 'Finish the project and submit it.',
-          startDate: '2025-03-20',
-          dueDate: '2025-03-25',
-          completed: false,
-        },
-        {
-          id: 2,
-          title: 'Write blog post',
-          description: 'Write a new post about React hooks.',
-          startDate: '2025-03-22',
-          dueDate: '2025-03-30',
-          completed: false,
-        },
-        {
-          id: 2,
-          title: 'Write blog post',
-          description: 'Write a new post about React hooks.',
-          startDate: '2025-03-22',
-          dueDate: '2025-03-30',
-          completed: false,
-        },
-      ]);
+            
+    const [tasks, setTasks] = useState<Task[]>([]);
+
+    useEffect(() => {
+      const storedToken = localStorage.getItem("token");
+
+          const fetchTasks = async () => {
+            try {
+              const response = await axios.get(
+                `${BASE_URL}/tasks?populate=*&[filters][userId][$eq]=${1}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${storedToken}`,
+                  },
+                }
+              );
+              setTasks(response.data);
+              
+            } catch (err) {
+              console.error("Error fetching tasks:", err);
+            }
+          };
+  
+          fetchTasks();
+    }, [userInfo.id]); 
+
       const togglecompleted = (id: number) => {
         setTasks(tasks.map((task) =>
           task.id === id ? { ...task, completed: !task.completed } : task
@@ -70,7 +75,7 @@ const TaskList = () => {
             </div>
     </div>
       <div className="flex gap-4">
-        {tasks.map((task) => (
+        {tasks.data&&tasks.data?.map((task) => (
           <div key={task.id} className="flex items-center w-full justify-between gap-3 p-4 bg-orange-100 rounded-lg ">
             <div className="flex flex-col">
               <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>

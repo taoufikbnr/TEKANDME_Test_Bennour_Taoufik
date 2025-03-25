@@ -3,36 +3,45 @@ import axios from "axios";
 import { useState } from "react";
 import {BASE_URL} from "../utils/utils"
 import { useRouter } from 'next/navigation'
+import Cookies from "js-cookie";
+import { useUser } from "../context/AuthContext";
 
 const Login = () => {
-    
+  const { setUserInfo: setContextUserInfo } = useUser();
+
     const [userInfo, setUserInfo] = useState({
         username: "",
         email: "",
         password: "",
       });
       const router = useRouter();
-      const handleChange = (e:any) => {
+      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setUserInfo({
           ...userInfo,
           [name]: value,
         });
       };
-      const handleSubmit = async (e:any) => {
+    
+      const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-          const response = await axios.post(BASE_URL+'/auth/local', {
+          const response = await axios.post(`${BASE_URL}/auth/local`, {
             identifier: userInfo.email,
             password: userInfo.password,
           });
     
-          localStorage.setItem('token', response.data.jwt);
-    
-          router.push('/');
-        } catch (err) {
-          console.error('Login error:', err.response.data);
-        //   setError('Login failed. Please try again.');
+          localStorage.setItem("token",response.data.jwt);
+          const user = response.data.user;
+          setContextUserInfo({ username: user.username, email: user.email, id: user.id });
+
+          router.push("/");
+        } catch (err: any) {
+          if (err.response) {
+            console.error("Login error:", err.response.data);
+          } else {
+            console.error("Unexpected error:", err);
+          }
         }
       };
     

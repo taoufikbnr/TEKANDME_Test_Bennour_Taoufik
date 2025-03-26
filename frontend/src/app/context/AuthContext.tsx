@@ -13,7 +13,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<{ username: string; email: string; id: string } | null>(null);
-  const [tasks,setTasks] = useState<>([]);
+  const [tasks,setTasks] = useState([]);
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUserInfo = localStorage.getItem("userInfo");

@@ -3,17 +3,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { BASE_URL, config } from '../utils/utils';
 import { format } from 'date-fns';
+import { useUser } from '../context/AuthContext';
 
 const AddTask = ({userId,date}:any) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
- 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedToken = localStorage.getItem('token'); 
-    }
-  }, []); 
+ const {setTasks} = useUser()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,8 +39,8 @@ const AddTask = ({userId,date}:any) => {
       alert("Task added successfully!");
       setTitle("");
       setDescription("");
-      setCompleted(false);
- 
+      setTasks((prev) => (Array.isArray(prev) ? [...prev, response.data.data] : [response.data.data]));
+      setTasks
     } catch (error) {
       console.error("Error adding task", error);
       alert("Failed to add task");

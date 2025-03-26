@@ -8,7 +8,7 @@ import { useUser } from "../context/AuthContext";
 
 const TaskList = ({userInfo}) => {
 
-
+  const {token,tasks,setTasks} = useUser()
     type Task = {
         id: number;
         title: string;
@@ -17,8 +17,8 @@ const TaskList = ({userInfo}) => {
         dueDate: string;
         completed: boolean;
       };
+            console.log(tasks);
             
-    const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
       const storedToken = localStorage.getItem("token");
@@ -26,7 +26,7 @@ const TaskList = ({userInfo}) => {
           const fetchTasks = async () => {
             try {
               const response = await axios.get(
-                `${BASE_URL}/tasks?populate=*&[filters][userId][$eq]=${1}`,
+                `${BASE_URL}/tasks?&[filters][userId][$eq]=${userInfo.id}`,
                 {
                   headers: {
                     Authorization: `Bearer ${storedToken}`,
@@ -43,18 +43,43 @@ const TaskList = ({userInfo}) => {
           fetchTasks();
     }, [userInfo.id]); 
 
-      const togglecompleted = (id: number) => {
-        setTasks(tasks.map((task) =>
-          task.id === id ? { ...task, completed: !task.completed } : task
-        ));
-      };
+    const toggleCompleted = async(documentId: number,completed:boolean) => {
+
+      
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await axios.put(`${BASE_URL}/tasks/${documentId}`, {
+          data: { completed: !completed }
+        },    {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
     
-      const handleDelete = (id: number) => {
-        setTasks(tasks.filter((task) => task.id !== id));
+        if (response.status === 200) {
+          setTasks((prev) => ({
+            ...prev,
+            data: prev.data.map((task) =>
+              task.documentId === documentId ? { ...task, completed: !task.completed } : task
+            ),
+          }));
+        }
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
+    };
+    
+      const handleDelete = (documentId: number) => {
+        setTasks({
+          ...tasks,
+          data: tasks.data.filter((task) => task.documentId !== documentId)
+        });
       };
     
       const handleEdit = (id: number) => {
-        alert(`Editing task ${id}`);
+        console.log(id);
+        
       };
   return (
     <div className="flex flex-col gap-4">
@@ -74,29 +99,29 @@ const TaskList = ({userInfo}) => {
             <SearchOutlined className="text-2l"/>
             </div>
     </div>
-      <div className="flex gap-4">
+      <div className="flex justify-between flex-wrap gap-4 w-full ">
         {tasks.data&&tasks.data?.map((task) => (
-          <div key={task.id} className="flex items-center w-full justify-between gap-3 p-4 bg-orange-100 rounded-lg ">
+          <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-100 rounded-lg ">
             <div className="flex flex-col">
               <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
               <p className="text-sm text-gray-600">{task.description}</p>
               <div className="text-xs text-gray-500">
                 <span>Start Date: {task.startDate}</span>
                 <br />
-                <span>Due Date: {task.dueDate}</span>
+                <span>Due Date: {task.endDate}</span>
               </div>
             </div>
             <div className="flex flex-col justify-center">
               <button
                 className={`text-xl ${task.completed ? 'text-green-500' : 'text-gray-500'}`}
-                onClick={() => togglecompleted(task.id)}
+                onClick={() => toggleCompleted(task.documentId,task.completed)}
               >
                 <CheckCircleOutline />
               </button>
 
-              <button onClick={() => handleEdit(task.id)}> <EditOutlined /></button>
+              <button onClick={() => handleEdit(task.documentId)}> <EditOutlined /></button>
 
-              <button onClick={() => handleDelete(task.id)}>
+              <button onClick={() => handleDelete(task.documentId)}>
                 <DeleteOutline />
               </button>
             </div>

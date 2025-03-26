@@ -19,10 +19,10 @@ export default function Home() {
   const router = useRouter();    
   const [userData, setUserData] = useState({})
   const { token } = useUser();
-
+  const [isLoading, setisLoading] = useState(false)
 
   useEffect(() => {
-  
+    setisLoading(true)
      const fetchUserInfo = async () => {
         try {
           const response = await axios.get(`${BASE_URL}/users/me`, {
@@ -31,6 +31,7 @@ export default function Home() {
             },
           });
           setUserData(response.data);
+          setisLoading(false)
         } catch (err) {
           console.error(err);
         }
@@ -39,6 +40,7 @@ export default function Home() {
       fetchUserInfo();
     
   }, [token, router]); 
+  if(isLoading) return (<div>Loading...</div>)
   return (
     <div className="flex flex-col gap-8 mx-15">
       <h1 className="text-3xl text-center mx-auto mt-3"><span className="font-bold">Hello,{userData?.username}, </span><span>Start planning today</span> </h1>

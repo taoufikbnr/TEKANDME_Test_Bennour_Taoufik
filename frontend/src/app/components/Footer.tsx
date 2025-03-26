@@ -10,12 +10,12 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <div className="bg-[#f3ebea] py-4 px-2 sm:px-8 flex justify-between items-center">
+    <div className="bg-[#f3ebea] py-3 px-2 sm:px-8 flex justify-between items-center">
         <div className="flex items-center gap-2">
            <Image width={50} height={50} src="/logo.webp" alt="logo" />
-           <span className='hidden sm:block' style={{fontFamily:"Lavishly Yours"}}>{"Todo List"}</span>
+           <span className='hidden sm:block md:text-2xl' style={{fontFamily:"Lavishly Yours"}}>{"Todo List"}</span>
            </div>
-        <p className='text-xs'>© 2023 Tekandme.All Rights Reserved.</p>
+        <p className='text-xs md:text-xl'>© 2023 Tekandme.All Rights Reserved.</p>
         <div className='gap-2 hidden sm:flex'>
         <span className="flex items-center justify-center h-9 w-9 border-2 border-gray-400 rounded-full cursor-pointer">
           <FontAwesomeIcon icon={faFacebookF} size="sm" />

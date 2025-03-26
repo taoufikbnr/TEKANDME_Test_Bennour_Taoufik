@@ -7,9 +7,13 @@ import { BASE_URL } from "../utils/utils";
 import { useUser } from "../context/AuthContext";
 import { Alert } from "@mui/material";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import TaskModal from "./TaskModal";
 
 const TaskList = ({userInfo}) => {
 const [search, setSearch] = useState("")
+const [selectedTask, setSelectedTask] = useState(null);
 
   const {token,tasks,setTasks} = useUser()
 
@@ -26,7 +30,6 @@ const [search, setSearch] = useState("")
         dueDate: string;
         completed: boolean;
       };
-            console.log(tasks);
            
 
     useEffect(() => {
@@ -100,7 +103,7 @@ const [search, setSearch] = useState("")
       };
     
       const handleEdit = (id: number) => {
-        console.log(id);
+      
         
       };
       const currentDate = new Date()
@@ -147,7 +150,7 @@ const [search, setSearch] = useState("")
             <CheckCircleOutline />
           </button>
 
-          <button onClick={() => handleEdit(task.documentId)}> <EditOutlined /></button>
+          <button onClick={() => setSelectedTask(task)}> <FontAwesomeIcon icon={faEdit} /></button>
 
           <button onClick={() => handleDelete(task.documentId)}>
             <DeleteOutline />
@@ -158,6 +161,9 @@ const [search, setSearch] = useState("")
     }
         )}
       </div>
+      {selectedTask && (
+        <TaskModal task={selectedTask} onClose={() => setSelectedTask(null)} />
+      )}
     </div>
   )
 }

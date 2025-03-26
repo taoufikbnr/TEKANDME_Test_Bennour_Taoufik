@@ -47,7 +47,7 @@ export default function Home() {
     <div className="flex flex-col gap-4 mx-15">
       <h1 className="text-3xl text-center mx-auto mt-3"><span className="font-bold">Hello,{userData?.username}, </span><span>Start planning today</span> </h1>
       <div className="flex max-h-[400px] overflow-auto">
-          <div className="w-[40%]">
+          <div className="w-[40%] hidden md:block">
             <CalendarPicker date={date} setDate={setDate}/> 
             </div>
           <div className="flex flex-col gap-4 w-full">

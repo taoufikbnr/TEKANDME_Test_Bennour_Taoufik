@@ -4,8 +4,8 @@ import { useUser } from '../context/AuthContext'
 
 const TaskStatus = () => {
     const {tasks} = useUser();
-    const completedTasks = tasks?.data?.filter((task) => task.completed === true).length  || [];
-    const pendingTasks = tasks?.data?.filter((task) => task.completed === false).length || [];
+    const completedTasks = tasks?.filter((task) => task.completed === true).length  || [];
+    const pendingTasks = tasks?.filter((task) => task.completed === false).length || [];
 
 
  
@@ -28,7 +28,7 @@ const TaskStatus = () => {
         <div className='flex flex-2 items-center justify-center text-center shadow-2xl rounded-3xl h-full'>
                 <h1 className='flex items-center gap-8 p-4 text-center font-bold text-4xl'>
                     <span className='text-blue-400'>TASKS CREATED</span>
-                    <span>{tasks.data&&tasks.data.length}</span>
+                    <span>{tasks&&tasks.length}</span>
                 </h1>
         </div>
     </div>

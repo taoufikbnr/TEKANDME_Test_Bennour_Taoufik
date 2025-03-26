@@ -9,3 +9,10 @@
 .react-calendar__tile--hasActive:hover {
   background: #f87676 !important;
 }
+div.react-calendar__month-view__weekNumbers{
+background-color: black !important;
+color:gray !important;
+}
+.react-calendar{
+  border: none !important;
+}

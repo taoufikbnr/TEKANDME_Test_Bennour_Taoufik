@@ -14,14 +14,15 @@ import TaskModal from "./TaskModal";
 const TaskList = ({userInfo}) => {
 const [search, setSearch] = useState("")
 const [selectedTask, setSelectedTask] = useState(null);
+const [sortOption, setSortOption] = useState('category')
+const {token,tasks,setTasks} = useUser()
 
-  const {token,tasks,setTasks} = useUser()
-
-  const filteredTasks = useMemo(() => {
-    return tasks?.filter((task) => 
-      task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [tasks, search]);
+const filteredTasks = useMemo(() => {
+  return tasks?.filter((task) => 
+    task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())
+);
+}, [tasks, search]);
+const [sortedTasks, setSortedTasks] = useState(filteredTasks);
     type Task = {
         id: number;
         title: string;
@@ -32,9 +33,19 @@ const [selectedTask, setSelectedTask] = useState(null);
       };
            
 
+      const sortTasks = (option: string) => {
+        let sorted = [...filteredTasks];
+        if (option === 'endDate') {
+          sorted = sorted.sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
+        } else if (option === 'created') {
+          sorted = sorted.sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        }
+        setSortedTasks(sorted);
+      };
     useEffect(() => {
       const storedToken = localStorage.getItem("token");
-
           const fetchTasks = async () => {
             try {
               const response = await axios.get(
@@ -55,9 +66,9 @@ const [selectedTask, setSelectedTask] = useState(null);
           fetchTasks();
     }, [userInfo.id]); 
 
-    const toggleCompleted = async(documentId: number,completed:boolean) => {
 
-      
+
+    const toggleCompleted = async(documentId: number,completed:boolean) => {
       const token = localStorage.getItem("token");
 
       try {
@@ -110,11 +121,23 @@ const [selectedTask, setSelectedTask] = useState(null);
   return (
     <div className="flex flex-col gap-4 overflow-auto" >
     <div className="flex justify-between">
-        <div className="flex gap-2">
-                <div className="flex bg-orange-100">
-                    <button className="p-2 px-4 ">By category </button>
-                    <span className="flex flex-col"><ArrowDropUp/><ArrowDropDown/></span> 
-                </div>
+          <div className="flex gap-2 ">
+              <div className="mb-4">
+              <label htmlFor="sortOptions" className="mr-2 ">Sort by:</label>
+              <select
+                id="sortOptions"
+                value={sortOption}
+                onChange={(e) => {
+                  setSortOption(e.target.value);
+                  sortTasks(e.target.value); 
+                }}
+                className="p-2 px-4 border rounded-md bg-orange-100"
+              >
+                <option value="endDate">By Due Date</option>
+                <option value="created">By Created Date</option>
+              </select>
+            </div>
+
                 <div className="flex bg-orange-100">
                     <button className="p-2 px-4 ">By priority </button>
                     <span className="flex flex-col"><ArrowDropUp/><ArrowDropDown/></span> 
@@ -126,7 +149,7 @@ const [selectedTask, setSelectedTask] = useState(null);
             </div>
     </div>
       <div className="flex justify-between flex-wrap gap-4 w-full max-h-[400px]">
-        {tasks&&filteredTasks.map((task) => 
+        {tasks&&sortedTasks.map((task) => 
     {
       const isOverdue = new Date(task.endDate) < currentDate && !task.completed;
 

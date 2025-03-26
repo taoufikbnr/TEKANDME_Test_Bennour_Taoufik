@@ -20,6 +20,9 @@ export default function RootLayout({
           integrity="sha384-oS3vJWb5lS2jR9Xh6D7D6j5j5su65ANkP2Xk2pJv9yy6cF94Rvh6+Vi3X8P1hj+A"
           crossOrigin="anonymous"
         />
+      <link rel="preconnect" href="https://fonts.googleapis.com"/>
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+      <link href="https://fonts.googleapis.com/css2?family=Lavishly+Yours&display=swap" rel="stylesheet"/>
       </head>
       <body
         className={`h-screen flex flex-col justify-between`}

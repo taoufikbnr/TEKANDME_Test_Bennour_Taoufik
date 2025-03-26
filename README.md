@@ -24,8 +24,8 @@ UI Library: Material UI (MUI)
 Strapi Login : 
 tawdev
 Admin111²
+<img src="./frontend/public/desktop.png" alt="desktop" width="600"/>
+<img src="./frontend/public/mobile.png" alt="mobile" width="600"/>
+<img src="./frontend/public/login.png" alt="login" width="600"/>
+<img src="./frontend/public/register.png" alt="register" width="600"/>
 
-![App Screenshot](./frontend/public/desktop.png){: width="400px"}
-![App Screenshot Mobile](./frontend/public/mobile.png){: width="400px"}
-![App Screenshot Mobile](./frontend/public/login.png){: width="400px"}
-![App Screenshot Mobile](./frontend/public/register.png){: width="400px"}

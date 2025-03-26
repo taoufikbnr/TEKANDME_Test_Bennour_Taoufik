@@ -50,10 +50,13 @@ const AddTask = ({userId,date}:any) => {
 
   
   return (
-<div className="flex justify-between gap-10 rounded-2xl w-full">
-    <input onChange={(e)=>setTitle(e.target.value)} className="p-4' bg-blue-100" type="text" placeholder="Type Title Of Task" />
-    <input onChange={(e)=>setDescription(e.target.value)} className="flex-1 p-4 bg-blue-100" type="text" placeholder="Type Title Of Task" />
-    <button onClick={handleSubmit} className="py-2 px-8 bg-[#5d9966] text-white"><span className="text-2xl">+</span></button>
+<div className="flex justify-between rounded-2xl gap-2 w-full">
+  <div className='hidden md:flex w-full gap-2'>
+    <input onChange={(e)=>setTitle(e.target.value)} className="flex p-1 sm:p-4' bg-blue-100" type="text" placeholder="Type Title Of Task" />
+    <input onChange={(e)=>setDescription(e.target.value)} className="flex-1  p-4 bg-blue-100" type="text" placeholder="Type Description Of Task" />
+  </div>
+    <span className='block sm:hidden text-red-400' style={{fontFamily:"Lavishly Yours",fontSize:30}}>{new Date().toLocaleString("en-US", { weekday: "long" })}</span>
+    <button onClick={handleSubmit} className="py-2 px-8 bg-[#5d9966] text-white cursor-pointer"><span className="text-2xl">+</span></button>
   </div>
   )
 }

@@ -14,7 +14,7 @@ import TaskModal from "./TaskModal";
 const TaskList = ({userInfo}) => {
 const [search, setSearch] = useState("")
 const [selectedTask, setSelectedTask] = useState(null);
-const [sortOption, setSortOption] = useState('category')
+const [sortOption, setSortOption] = useState('endDate')
 const {token,tasks,setTasks} = useUser()
 
 const filteredTasks = useMemo(() => {
@@ -23,6 +23,7 @@ const filteredTasks = useMemo(() => {
 );
 }, [tasks, search]);
 const [sortedTasks, setSortedTasks] = useState(filteredTasks);
+
     type Task = {
         id: number;
         title: string;
@@ -32,16 +33,16 @@ const [sortedTasks, setSortedTasks] = useState(filteredTasks);
         completed: boolean;
       };
            
-
       const sortTasks = (option: string) => {
         let sorted = [...filteredTasks];
         if (option === 'endDate') {
           sorted = sorted.sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime());
-        } else if (option === 'created') {
+        }else if (option === 'created') {
           sorted = sorted.sort(
             (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
         }
+      
         setSortedTasks(sorted);
       };
     useEffect(() => {
@@ -57,7 +58,6 @@ const [sortedTasks, setSortedTasks] = useState(filteredTasks);
                 }
               );
               setTasks(response.data.data);
-              
             } catch (err) {
               console.error("Error fetching tasks:", err);
             }
@@ -119,10 +119,9 @@ const [sortedTasks, setSortedTasks] = useState(filteredTasks);
       const currentDate = new Date()
 
   return (
-    <div className="flex flex-col gap-4 overflow-auto" >
-    <div className="flex justify-between">
-          <div className="flex gap-2 ">
-              <div className="mb-4">
+    <div className="flex flex-col gap-2 overflow-auto" >
+    <div className="flex justify-between gap-4">
+          <div className="flex gap-2 items-center">
               <label htmlFor="sortOptions" className="mr-2 ">Sort by:</label>
               <select
                 id="sortOptions"
@@ -131,34 +130,28 @@ const [sortedTasks, setSortedTasks] = useState(filteredTasks);
                   setSortOption(e.target.value);
                   sortTasks(e.target.value); 
                 }}
-                className="p-2 px-4 border rounded-md bg-orange-100"
+                className="p-4 px-4 border-none rounded-md bg-orange-200 cursor-pointer"
               >
                 <option value="endDate">By Due Date</option>
                 <option value="created">By Created Date</option>
               </select>
             </div>
-
-                <div className="flex bg-orange-100">
-                    <button className="p-2 px-4 ">By priority </button>
-                    <span className="flex flex-col"><ArrowDropUp/><ArrowDropDown/></span> 
-                </div>
-            </div>
-            <div className="border-2 border-orange-100" >
-            <input onChange={(e)=>setSearch(e.target.value)} type="text" placeholder="Search by Name" className="p-2 rounded outline-none placeholder:text-blue-200"/>
-            <SearchOutlined className="text-2l"/>
+            <div className="flex items-center border-2 border-orange-100" >
+              <input onChange={(e)=>setSearch(e.target.value)} type="text" placeholder="Search by Name" className="w-[200px] rounded outline-none placeholder:text-blue-200"/>
+              <SearchOutlined className="text-2l"/>
             </div>
     </div>
       <div className="flex justify-between flex-wrap gap-4 w-full max-h-[400px]">
-        {tasks&&sortedTasks.map((task) => 
+        {tasks&& (sortedTasks.length > 0 ? sortedTasks : filteredTasks).map((task) => 
     {
       const isOverdue = new Date(task.endDate) < currentDate && !task.completed;
 
       return (
-        <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-100 rounded-lg ">
+        <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-200 rounded-lg ">
         <div className="flex flex-col">
           <h3 className="text-lg font-semibold text-gray-800">{task.title} {isOverdue&& <PriorityHigh className="text-red-500"/> }</h3>
           <p className="text-sm text-gray-600">{task.description}</p>
-          <div className="text-xs text-gray-500">
+          <div className="text-sm text-dark-500">
             <span>Start Date: {task.startDate}</span>
             <br />
             <span>Due Date: {task.endDate}</span>

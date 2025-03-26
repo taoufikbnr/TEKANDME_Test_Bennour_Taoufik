@@ -21,7 +21,10 @@ Authentication: JWT (JSON Web Token)
 
 UI Library: Material UI (MUI)
 
-Login : 
+Strapi Login : 
 tawdev
 Admin111²
 
+![App Screenshot](./frontend/public/desktop.png)
+
+![App Screenshot Mobile](./frontend/public/mobile.png)

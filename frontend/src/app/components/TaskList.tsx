@@ -33,7 +33,7 @@ const TaskList = ({userInfo}) => {
                   },
                 }
               );
-              setTasks(response.data);
+              setTasks(response.data.data);
               
             } catch (err) {
               console.error("Error fetching tasks:", err);
@@ -58,23 +58,36 @@ const TaskList = ({userInfo}) => {
         });
     
         if (response.status === 200) {
-          setTasks((prev) => ({
-            ...prev,
-            data: prev.data.map((task) =>
+          setTasks((prev) => 
+            prev.map((task) =>
               task.documentId === documentId ? { ...task, completed: !task.completed } : task
-            ),
-          }));
+            )
+          );
         }
       } catch (error) {
         console.error("Error updating task:", error);
       }
     };
     
-      const handleDelete = (documentId: number) => {
-        setTasks({
-          ...tasks,
-          data: tasks.data.filter((task) => task.documentId !== documentId)
-        });
+      const handleDelete = async(documentId: number) => {
+        const token = localStorage.getItem("token");
+
+        try {
+          const response = await axios.delete(`${BASE_URL}/tasks/${documentId}`,{
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          
+          if (response.status === 204) {
+            if (response.status === 204) {
+              setTasks((prev) => prev.filter((task) => task.documentId !== documentId));
+            }
+          }
+        } catch (error) {
+          console.error("Error deleting task:", error);
+        }
+  
       };
     
       const handleEdit = (id: number) => {
@@ -100,7 +113,7 @@ const TaskList = ({userInfo}) => {
             </div>
     </div>
       <div className="flex justify-between flex-wrap gap-4 w-full ">
-        {tasks.data&&tasks.data?.map((task) => (
+        {tasks&&tasks?.map((task) => (
           <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-100 rounded-lg ">
             <div className="flex flex-col">
               <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>

@@ -33,7 +33,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// Custom hook to access the UserContext
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (!context) {

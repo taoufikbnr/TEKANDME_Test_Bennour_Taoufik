@@ -1,4 +1,11 @@
-.react-datepicker__day--selected {
-    background-color: red !important; /* Change to your desired color */
-    color: white !important; /* Change text color of selected date */
-  }
+
+  .react-calendar__tile--active {
+    background: #f87676 !important;
+    color: #fff;
+}
+.react-calendar__tile--hasActive {
+  background: #f87676 !important;
+}
+.react-calendar__tile--hasActive:hover {
+  background: #f87676 !important;
+}

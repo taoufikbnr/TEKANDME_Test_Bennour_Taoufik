@@ -42,7 +42,7 @@ export default function Home() {
   }, [token, router]); 
   if(isLoading) return (<div>Loading...</div>)
   return (
-    <div className="flex flex-col gap-8 mx-15">
+    <div className="flex flex-col gap-4 mx-15">
       <h1 className="text-3xl text-center mx-auto mt-3"><span className="font-bold">Hello,{userData?.username}, </span><span>Start planning today</span> </h1>
       <div className="flex gap-12">
           <div className="w-[40%]">

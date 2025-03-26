@@ -15,7 +15,7 @@ const TaskStatus = () => {
             <div className='bg-red-100 font-bold rounded-4xl p-4 w-[150px] h-full'>
                 <h1 className='flex flex-col items-center p-4 text-center'>
                     <span>COMPLETED TASKS</span>
-                    <span className='text-2xl'>{pendingTasks}</span>
+                    <span className='text-2xl'>{completedTasks}</span>
                 </h1>
             </div>
             <div className='bg-red-100 font-bold rounded-4xl p-4 w-[150px] h-full'>

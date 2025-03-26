@@ -28,7 +28,6 @@ const Register = () => {
           router.push('/');
         } catch (err) {
           console.error('Login error:', err.response.data);
-        //   setError('Login failed. Please try again.');
         }
       };
     

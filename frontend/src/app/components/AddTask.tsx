@@ -31,16 +31,16 @@ const AddTask = ({userId,date}:any) => {
         taskData, 
         {
           headers: {
-            Authorization: `Bearer ${token}`,  // Ensure that the Bearer token is included
-            'Content-Type': 'application/json', // Set content type as JSON
+            Authorization: `Bearer ${token}`,  
+            'Content-Type': 'application/json', 
           },
         }
       );
       alert("Task added successfully!");
       setTitle("");
       setDescription("");
-      setTasks((prev) => (Array.isArray(prev) ? [...prev, response.data.data] : [response.data.data]));
-      setTasks
+      
+      setTasks((prev) => [...prev, response.data.data]);
     } catch (error) {
       console.error("Error adding task", error);
       alert("Failed to add task");
@@ -49,9 +49,9 @@ const AddTask = ({userId,date}:any) => {
 
   
   return (
-<div className="flex gap-2 rounded-2xl w-full">
+<div className="flex justify-between gap-10 rounded-2xl w-full">
     <input onChange={(e)=>setTitle(e.target.value)} className="p-4' bg-blue-100" type="text" placeholder="Type Title Of Task" />
-    <input onChange={(e)=>setDescription(e.target.value)} className="p-4 bg-blue-100" type="text" placeholder="Type Title Of Task" />
+    <input onChange={(e)=>setDescription(e.target.value)} className="flex-1 p-4 bg-blue-100" type="text" placeholder="Type Title Of Task" />
     <button onClick={handleSubmit} className="py-2 px-8 bg-[#5d9966] text-white"><span className="text-2xl">+</span></button>
   </div>
   )

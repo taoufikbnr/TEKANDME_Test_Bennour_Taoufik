@@ -3,7 +3,8 @@ import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { UserProvider } from "./context/AuthContext";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RootLayout({
   children,
@@ -21,10 +22,11 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`h-screen flex flex-col gap-8  justify-between`}
+        className={`h-screen flex flex-col justify-between`}
       >
         <UserProvider>
           <Header />
+          <ToastContainer position="top-center" autoClose={3000} />
           {children}
           <Footer/>
         </UserProvider>

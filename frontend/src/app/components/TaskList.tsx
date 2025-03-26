@@ -1,15 +1,23 @@
 "use client"
 
-import { useEffect, useState } from "react";
-import { ArrowDropDown, ArrowDropUp, CheckCircle, CheckCircleOutline, Delete, DeleteOutline, EditOutlined, Search, SearchOffOutlined, SearchOutlined } from '@mui/icons-material';
+import { useEffect, useMemo, useState } from "react";
+import { ArrowDropDown, ArrowDropUp, CheckCircle, CheckCircleOutline, Delete, DeleteOutline, EditOutlined, PriorityHigh, Search, SearchOffOutlined, SearchOutlined } from '@mui/icons-material';
 import axios from "axios";
 import { BASE_URL } from "../utils/utils";
 import { useUser } from "../context/AuthContext";
+import { Alert } from "@mui/material";
+import { toast } from "react-toastify";
 
 const TaskList = ({userInfo}) => {
 const [search, setSearch] = useState("")
 
   const {token,tasks,setTasks} = useUser()
+
+  const filteredTasks = useMemo(() => {
+    return tasks?.filter((task) => 
+      task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [tasks, search]);
     type Task = {
         id: number;
         title: string;
@@ -19,7 +27,7 @@ const [search, setSearch] = useState("")
         completed: boolean;
       };
             console.log(tasks);
-            
+           
 
     useEffect(() => {
       const storedToken = localStorage.getItem("token");
@@ -81,9 +89,9 @@ const [search, setSearch] = useState("")
           });
           
           if (response.status === 204) {
-            if (response.status === 204) {
               setTasks((prev) => prev.filter((task) => task.documentId !== documentId));
-            }
+              toast.success("Task deleted successfully!");
+              
           }
         } catch (error) {
           console.error("Error deleting task:", error);
@@ -95,8 +103,10 @@ const [search, setSearch] = useState("")
         console.log(id);
         
       };
+      const currentDate = new Date()
+
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-auto" >
     <div className="flex justify-between">
         <div className="flex gap-2">
                 <div className="flex bg-orange-100">
@@ -113,34 +123,40 @@ const [search, setSearch] = useState("")
             <SearchOutlined className="text-2l"/>
             </div>
     </div>
-      <div className="flex justify-between flex-wrap gap-4 w-full ">
-        {tasks&&tasks?.filter(task=>task.title.toLowerCase().includes(search.toLowerCase())).map((task) => (
-          <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-100 rounded-lg ">
-            <div className="flex flex-col">
-              <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
-              <p className="text-sm text-gray-600">{task.description}</p>
-              <div className="text-xs text-gray-500">
-                <span>Start Date: {task.startDate}</span>
-                <br />
-                <span>Due Date: {task.endDate}</span>
-              </div>
-            </div>
-            <div className="flex flex-col justify-center">
-              <button
-                className={`text-xl ${task.completed ? 'text-green-500' : 'text-gray-500'}`}
-                onClick={() => toggleCompleted(task.documentId,task.completed)}
-              >
-                <CheckCircleOutline />
-              </button>
+      <div className="flex justify-between flex-wrap gap-4 w-full max-h-[400px]">
+        {tasks&&filteredTasks.map((task) => 
+    {
+      const isOverdue = new Date(task.endDate) < currentDate && !task.completed;
 
-              <button onClick={() => handleEdit(task.documentId)}> <EditOutlined /></button>
-
-              <button onClick={() => handleDelete(task.documentId)}>
-                <DeleteOutline />
-              </button>
-            </div>
+      return (
+        <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-100 rounded-lg ">
+        <div className="flex flex-col">
+          <h3 className="text-lg font-semibold text-gray-800">{task.title} {isOverdue&& <PriorityHigh className="text-red-500"/> }</h3>
+          <p className="text-sm text-gray-600">{task.description}</p>
+          <div className="text-xs text-gray-500">
+            <span>Start Date: {task.startDate}</span>
+            <br />
+            <span>Due Date: {task.endDate}</span>
           </div>
-        ))}
+        </div>
+        <div className="flex flex-col justify-center">
+          <button
+            className={`text-xl ${task.completed ? 'text-green-500' : 'text-gray-500'}`}
+            onClick={() => toggleCompleted(task.documentId,task.completed)}
+          >
+            <CheckCircleOutline />
+          </button>
+
+          <button onClick={() => handleEdit(task.documentId)}> <EditOutlined /></button>
+
+          <button onClick={() => handleDelete(task.documentId)}>
+            <DeleteOutline />
+          </button>
+        </div>
+      </div>
+      )
+    }
+        )}
       </div>
     </div>
   )

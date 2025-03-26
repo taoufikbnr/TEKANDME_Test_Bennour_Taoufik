@@ -1,11 +1,12 @@
 "use client"
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {BASE_URL} from "../utils/utils"
 import { useRouter } from 'next/navigation'
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 const Register = () => {
-    
     const [userInfo, setUserInfo] = useState({
         username: "",
         email: "",
@@ -28,9 +29,15 @@ const Register = () => {
           router.push('/');
         } catch (err) {
           console.error('Login error:', err.response.data);
+          err.response?.data.error.details.errors.forEach((err) => toast.error(err.message));
+          
         }
       };
-    
+      useEffect(() => {
+        const auth = localStorage.getItem("token")
+        if(auth) router.push("/")
+        }, [])
+        
   return (
     <div className="flex items-center h-screen">
         <div className="top">
@@ -42,8 +49,8 @@ const Register = () => {
               <input className="p-2 border rounded-l" type={"name"} onChange={handleChange} name="username" placeholder="username"/>
               <input className="p-2 border rounded-l" type={"email"} onChange={handleChange} name="email" placeholder="email"/>
               <input className="p-2 border rounded-l" type={"password"} onChange={handleChange} name="password" placeholder="password"/>
-              <button onClick={handleSubmit}>Sign Up</button>
-              <span>Net to Netflix? <b>Sign in now.</b> </span>
+              <button className="py-2 px-4 bg-orange-200 cursor-pointer" onClick={handleSubmit}>Sign Up</button>
+              <span>You have an account?<b><Link href="/login">Sign in now</Link></b> </span>
            </form>
         </div>
     </div>

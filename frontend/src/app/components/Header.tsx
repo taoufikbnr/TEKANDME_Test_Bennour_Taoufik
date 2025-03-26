@@ -6,8 +6,8 @@ const Header = () => {
   const profileImage = 'https://via.placeholder.com/150';
 
   return (
-    <div className="bg-[#f3ebea] hadow-md p-4 flex justify-between items-center">
-      <div className="flex items-center space-x-4">
+    <div className="bg-[#f3ebea] h-[50px] shadow-md flex justify-between items-center">
+      <div className="flex items-center">
         {/* <Image src="" /> */}
         <span>{"Todo List"}</span>
       </div>

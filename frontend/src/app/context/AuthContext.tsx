@@ -14,20 +14,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token, setToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<{ username: string; email: string; id: string } | null>(null);
   const [tasks,setTasks] = useState([]);
+  const [loading,setloading] = useState(false);
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUserInfo = localStorage.getItem("userInfo");
 
-    if (storedToken) {
+    if (!loading&&storedToken) {
       setToken(storedToken);
     }
 
-    if (storedUserInfo) {
+    if (!loading&&storedUserInfo) {
       setUserInfo(JSON.parse(storedUserInfo));
     }
   }, []);
   return (
-    <UserContext.Provider value={{tasks, setTasks, token, userInfo, setToken, setUserInfo }}>
+    <UserContext.Provider value={{loading,setloading,tasks, setTasks, token, userInfo, setToken, setUserInfo }}>
       {children}
     </UserContext.Provider>
   );

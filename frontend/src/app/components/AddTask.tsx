@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { BASE_URL, config } from '../utils/utils';
 import { format } from 'date-fns';
 import { useUser } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const AddTask = ({userId,date}:any) => {
   const [title, setTitle] = useState("");
@@ -36,14 +37,14 @@ const AddTask = ({userId,date}:any) => {
           },
         }
       );
-      alert("Task added successfully!");
+      toast.success("Task added successfully!");
       setTitle("");
       setDescription("");
       
       setTasks((prev) => [...prev, response.data.data]);
     } catch (error) {
-      console.error("Error adding task", error);
-      alert("Failed to add task");
+      error.response?.data.error.details.errors.forEach((error) => toast.error(error.message));
+      
     }
   };
 

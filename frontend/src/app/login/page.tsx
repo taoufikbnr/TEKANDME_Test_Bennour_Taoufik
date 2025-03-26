@@ -1,14 +1,16 @@
 "use client"
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {BASE_URL} from "../utils/utils"
 import { useRouter } from 'next/navigation'
 import Cookies from "js-cookie";
 import { useUser } from "../context/AuthContext";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const { setUserInfo: setContextUserInfo } = useUser();
-
+  const {loading,setloading, setUserInfo: setContextUserInfo } = useUser();
+    const [error, setError] = useState([])
     const [userInfo, setUserInfo] = useState({
         username: "",
         email: "",
@@ -22,9 +24,14 @@ const Login = () => {
           [name]: value,
         });
       };
-    
+      useEffect(() => {
+      const auth = localStorage.getItem("token")
+      if(auth) router.push("/")
+      }, [])
+      
       const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setloading(true)
         try {
           const response = await axios.post(`${BASE_URL}/auth/local`, {
             identifier: userInfo.email,
@@ -34,17 +41,19 @@ const Login = () => {
           localStorage.setItem("token",response.data.jwt);
           const user = response.data.user;
           setContextUserInfo({ username: user.username, email: user.email, id: user.id });
-
+          setloading(false)
           router.push("/");
         } catch (err: any) {
-          if (err.response) {
-            console.error("Login error:", err.response.data);
-          } else {
-            console.error("Unexpected error:", err);
+          if(err.response.data.error.message==="Invalid identifier or password"){
+            toast.error(err.response.data.error.message)
+          }else{
+            err.response?.data.error.details.errors.forEach((err) => toast.error(err.message));
+
           }
-        }
+      
+          }
       };
-    
+  
   return (
     <div className="flex items-center h-screen">
         <div className="top">
@@ -55,8 +64,8 @@ const Login = () => {
               <h1>Sign In</h1>
               <input className="p-2 border rounded-l" type={"email"} onChange={handleChange} name="email" placeholder="email"/>
               <input className="p-2 border rounded-l" type={"password"} onChange={handleChange} name="password" placeholder="password"/>
-              <button onClick={handleSubmit}>Sin In</button>
-              <span>Net to Netflix? <b>Sign in now.</b> </span>
+              <button className="py-2 px-4 bg-orange-200 cursor-pointer"  onClick={handleSubmit}>Sign In</button>
+              <span>No account?<b><Link href="/register">Sign up now</Link></b> </span>
            </form>
         </div>
     </div>

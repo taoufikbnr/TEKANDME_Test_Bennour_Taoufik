@@ -25,6 +25,7 @@ Strapi Login :
 tawdev
 Admin111²
 
-![App Screenshot](./frontend/public/desktop.png)
-
-![App Screenshot Mobile](./frontend/public/mobile.png)
+![App Screenshot](./frontend/public/desktop.png){: width="400px"}
+![App Screenshot Mobile](./frontend/public/mobile.png){: width="400px"}
+![App Screenshot Mobile](./frontend/public/login.png){: width="400px"}
+![App Screenshot Mobile](./frontend/public/register.png){: width="400px"}

@@ -10,16 +10,16 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const UserProvider = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<{ username: string; email: string; id: string } | null>(null);
   const [tasks,setTasks] = useState([]);
-  const [loading,setloading] = useState(false);
+  const [loading,setloading] = useState<boolean>(false);
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUserInfo = localStorage.getItem("userInfo");
 
-    if (!loading&&storedToken) {
+    if (storedToken) {
       setToken(storedToken);
     }
 

@@ -59,7 +59,7 @@ const Login = () => {
         <div className="top">
             <img className="logo" src='https://assets.stickpng.com/images/580b57fcd9996e24bc43c529.png' />
         </div>
-        <div className="flex items-center justify-center w-[400px] mx-auto  h-[600px] p-4 ">
+        <div className="flex items-center justify-center w-[400px] mx-auto  h-[500px] p-4  bg-orange-100">
            <form className="flex flex-col gap-4">
               <h1>Sign In</h1>
               <input className="p-2 border rounded-l" type={"email"} onChange={handleChange} name="email" placeholder="email"/>

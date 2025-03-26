@@ -27,9 +27,9 @@ const Register = () => {
           });
               localStorage.setItem('token', response.data.jwt);
           router.push('/');
-        } catch (err) {
+        } catch (err:any) {
           console.error('Login error:', err.response.data);
-          err.response?.data.error.details.errors.forEach((err) => toast.error(err.message));
+          err.response?.data.error.details.errors.forEach((err:any) => toast.error(err.message));
           
         }
       };

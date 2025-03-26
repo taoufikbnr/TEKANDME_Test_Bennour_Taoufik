@@ -16,14 +16,13 @@ const TaskList = ({userInfo}) => {
 const [search, setSearch] = useState("")
 const [selectedTask, setSelectedTask] = useState(null);
 const [sortOption, setSortOption] = useState('endDate')
-const {token,tasks,setTasks} = useUser()
+const {sortedTasks,setSortedTasks,token,tasks,setTasks} = useUser()
 
 const filteredTasks = useMemo(() => {
   return tasks?.filter((task) => 
     task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())
 );
 }, [tasks, search]);
-const [sortedTasks, setSortedTasks] = useState(filteredTasks);
 
     type Task = {
         id: number;

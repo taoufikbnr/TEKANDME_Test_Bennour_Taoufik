@@ -3,9 +3,9 @@ import React from 'react'
 import { useUser } from '../context/AuthContext'
 
 const TaskStatus = () => {
-    const {tasks} = useUser();
-    const completedTasks = tasks?.filter((task) => task.completed === true).length  || [];
-    const pendingTasks = tasks?.filter((task) => task.completed === false).length || [];
+    const {tasks}:UserContextType = useUser();
+    const completedTasks = tasks?.filter((task:task) => task.completed === true).length  || [];
+    const pendingTasks = tasks?.filter((task:task) => task.completed === false).length || [];
  
     return (
         <div className='flex flex-col md:flex-row items-cente items-centerr justify-between gap-2 w-full mb-4'>

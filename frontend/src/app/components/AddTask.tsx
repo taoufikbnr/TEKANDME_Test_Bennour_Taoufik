@@ -67,7 +67,7 @@ const AddTask = ({userId,date}:any) => {
   </div>
     <span className='block md:hidden text-red-400' style={{fontFamily:"Lavishly Yours",fontSize:30}}>{new Date().toLocaleString("en-US", { weekday: "long" })}</span>
     <button onClick={handleSubmit} className="hidden md:block py-2 px-8 bg-[#5d9966] text-white cursor-pointer"><span className="text-2xl">+</span></button>
-    <button onClick={handleOpenModal} className="block md:hidden  py-2 px-8 bg-[#945d99] text-white cursor-pointer"><span className="text-2xl">+</span></button>
+    <button onClick={handleOpenModal} className="block md:hidden  py-2 px-8 bg-[#5d9966] text-white cursor-pointer"><span className="text-2xl">+</span></button>
     {openModal && (
         <TaskModal userId={userId.toString()} edit={false} task={null} onClose={handleCloseModal } />
       )}

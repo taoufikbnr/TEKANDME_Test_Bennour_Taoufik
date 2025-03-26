@@ -10,13 +10,13 @@ const TaskStatus = () => {
     return (
         <div className='flex flex-col md:flex-row md:items-center justify-between gap-2 w-full mb-4'>
             <div className='flex justify-between gap-2'>
-            <div className='bg-orange-200 font-bold rounded-4xl p-4 w-full md:w-[150px] h-[100px] md:h-[120px]'>
+            <div className='bg-orange-200 font-bold rounded-4xl p-4 w-full md:w-[150px] h-[120px] md:h-[120px]'>
                 <h1 className='flex flex-col items-center p-4 text-center'>
                 <span>COMPLETED TASKS</span>
                 <span className='text-2xl'>{String(completedTasks).padStart(2, '0')}</span>
                 </h1>
             </div>
-            <div className='bg-red-100 font-bold rounded-4xl p-4 w-full md:w-[150px] h-[100px] md:h-[120px]'>
+            <div className='bg-red-100 font-bold rounded-4xl p-4 w-full md:w-[150px] h-[120px] md:h-[120px]'>
                 <h1 className='flex flex-col items-center p-4 text-center'>
                 <span>PENDING TASKS</span>
                 <span className='text-2xl'>{String(pendingTasks).padStart(2, '0')}</span>

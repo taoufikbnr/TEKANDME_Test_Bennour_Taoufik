@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <div className="bg-[#f3ebea] py-3 px-2 sm:px-8 flex justify-between items-center">
+    <div className="bg-[#f3ebea] py-1 px-2 sm:px-8 flex justify-between items-center">
         <div className="flex items-center gap-2">
            <Image width={50} height={50} src="/logo.webp" alt="logo" />
            <span className='hidden sm:block md:text-2xl' style={{fontFamily:"Lavishly Yours"}}>{"Todo List"}</span>

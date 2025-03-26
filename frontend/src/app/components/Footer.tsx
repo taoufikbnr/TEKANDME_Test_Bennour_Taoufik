@@ -16,7 +16,7 @@ const Footer = () => {
            <span style={{fontFamily:"Lavishly Yours",fontSize:26}}>{"Todo List"}</span>
            </div>
         <p>© 2023 Tekandme.All Rights Reserved.</p>
-        <div className='flex gap-2'>
+        <div className='gap-2 hidden sm:flex'>
         <span className="flex items-center justify-center h-9 w-9 border-2 border-gray-400 rounded-full cursor-pointer">
           <FontAwesomeIcon icon={faFacebookF} size="sm" />
         </span>

@@ -143,7 +143,7 @@ const filteredTasks = useMemo(() => {
       const isOverdue = new Date(task.endDate) < currentDate && !task.completed;
 
       return (
-        <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-200 rounded-lg ">
+        <div key={task.id} className="flex items-center w-full md:w-[48%] justify-between p-4 bg-orange-200 rounded-lg ">
         <div className="flex flex-col">
           <h3 className="text-lg font-semibold text-gray-800">{task.title} {isOverdue&& <PriorityHigh className="text-red-500"/> }</h3>
           <p className="text-sm text-gray-600">{task.description}</p>

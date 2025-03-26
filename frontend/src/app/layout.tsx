@@ -25,7 +25,7 @@ export default function RootLayout({
       <link href="https://fonts.googleapis.com/css2?family=Lavishly+Yours&display=swap" rel="stylesheet"/>
       </head>
       <body
-        className={`h-screen flex flex-col justify-between`}
+        className={` flex flex-col justify-between`}
       >
         <UserProvider>
           <Header />

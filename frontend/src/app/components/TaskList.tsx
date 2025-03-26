@@ -176,7 +176,7 @@ const filteredTasks = useMemo(() => {
         )}
       </div>
       {selectedTask && (
-        <TaskModal task={selectedTask} onClose={() => setSelectedTask(null)} />
+        <TaskModal edit={true} task={selectedTask} onClose={() => setSelectedTask(null)} />
       )}
     </div>
   )

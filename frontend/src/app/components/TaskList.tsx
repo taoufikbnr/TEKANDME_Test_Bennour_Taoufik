@@ -93,8 +93,7 @@ const [selectedTask, setSelectedTask] = useState(null);
           
           if (response.status === 204) {
               setTasks((prev) => prev.filter((task) => task.documentId !== documentId));
-              toast.success("Task deleted successfully!");
-              
+              toast.success("Task deleted successfully!");      
           }
         } catch (error) {
           console.error("Error deleting task:", error);

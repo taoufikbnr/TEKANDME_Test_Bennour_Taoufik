@@ -7,6 +7,7 @@ import { BASE_URL } from "../utils/utils";
 import { useUser } from "../context/AuthContext";
 
 const TaskList = ({userInfo}) => {
+const [search, setSearch] = useState("")
 
   const {token,tasks,setTasks} = useUser()
     type Task = {
@@ -108,12 +109,12 @@ const TaskList = ({userInfo}) => {
                 </div>
             </div>
             <div className="border-2 border-orange-100" >
-            <input type="text" placeholder="Search by Name" className="p-2 rounded outline-none placeholder:text-blue-200"/>
+            <input onChange={(e)=>setSearch(e.target.value)} type="text" placeholder="Search by Name" className="p-2 rounded outline-none placeholder:text-blue-200"/>
             <SearchOutlined className="text-2l"/>
             </div>
     </div>
       <div className="flex justify-between flex-wrap gap-4 w-full ">
-        {tasks&&tasks?.map((task) => (
+        {tasks&&tasks?.filter(task=>task.title.toLowerCase().includes(search.toLowerCase())).map((task) => (
           <div key={task.id} className="flex items-center w-[48%] justify-between p-4 bg-orange-100 rounded-lg ">
             <div className="flex flex-col">
               <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>

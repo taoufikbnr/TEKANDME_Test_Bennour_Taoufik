@@ -28,4 +28,5 @@ Admin111²
 <img src="./frontend/public/mobile.png" alt="mobile" width="600"/>
 <img src="./frontend/public/login.png" alt="login" width="600"/>
 <img src="./frontend/public/register.png" alt="register" width="600"/>
+<img src="./frontend/public/singePage.png" alt="register" width="600"/>
 

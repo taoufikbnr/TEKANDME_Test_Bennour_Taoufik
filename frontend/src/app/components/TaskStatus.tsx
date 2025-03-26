@@ -6,11 +6,9 @@ const TaskStatus = () => {
     const {tasks} = useUser();
     const completedTasks = tasks?.filter((task) => task.completed === true).length  || [];
     const pendingTasks = tasks?.filter((task) => task.completed === false).length || [];
-
-
  
     return (
-        <div className='flex flex-col md:flex-row items-cente items-centerr justify-between gap-2 w-full'>
+        <div className='flex flex-col md:flex-row items-cente items-centerr justify-between gap-2 w-full mb-4'>
             <div className='flex justify-between gap-2'>
             <div className='bg-orange-200 font-bold rounded-4xl p-4 w-full md:w-[150px] h-full'>
                 <h1 className='flex flex-col items-center p-4 text-center'>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDropDown, ArrowDropUp, CheckCircle, CheckCircleOutline, Delete, DeleteOutline, EditOutlined, PriorityHigh, Search, SearchOffOutlined, SearchOutlined } from '@mui/icons-material';
+import { CheckCircleOutline, DeleteForever, PriorityHigh,SearchOutlined, Visibility } from '@mui/icons-material';
 import axios from "axios";
 import { BASE_URL } from "../utils/utils";
 import { useUser } from "../context/AuthContext";
@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import TaskModal from "./TaskModal";
+import Link from "next/link";
 
 const TaskList = ({userInfo}) => {
 const [search, setSearch] = useState("")
@@ -112,10 +113,6 @@ const [sortedTasks, setSortedTasks] = useState(filteredTasks);
   
       };
     
-      const handleEdit = (id: number) => {
-      
-        
-      };
       const currentDate = new Date()
 
   return (
@@ -158,17 +155,20 @@ const [sortedTasks, setSortedTasks] = useState(filteredTasks);
           </div>
         </div>
         <div className="flex flex-col justify-center">
+          <Link href={`/tasks/${task.documentId}?id=${task.userId}`}  >
+            <Visibility />
+          </Link>
           <button
-            className={`text-xl ${task.completed ? 'text-green-500' : 'text-gray-500'}`}
+            className={`text-xl cursor-pointer ${task.completed ? 'text-green-500' : 'text-gray-500'}`}
             onClick={() => toggleCompleted(task.documentId,task.completed)}
           >
             <CheckCircleOutline />
           </button>
 
-          <button onClick={() => setSelectedTask(task)}> <FontAwesomeIcon icon={faEdit} /></button>
+          <button className="cursor-pointer" onClick={() => setSelectedTask(task)}> <FontAwesomeIcon icon={faEdit} /></button>
 
-          <button onClick={() => handleDelete(task.documentId)}>
-            <DeleteOutline />
+          <button className="cursor-pointer" onClick={() => handleDelete(task.documentId)}>
+            <DeleteForever />
           </button>
         </div>
       </div>

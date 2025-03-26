@@ -33,7 +33,7 @@ const Header = () => {
       </div>
       <div className="flex items-center">
         <img
-          src={"./profile_img.jpg"}
+          src={"/profile_img.jpg"}
           alt="profile"
           className="w-10 h-10 rounded-full object-cover border-2 border-gray-300"
         />

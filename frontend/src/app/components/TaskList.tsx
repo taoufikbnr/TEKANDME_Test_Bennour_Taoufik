@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircleOutline, DeleteForever, PriorityHigh,SearchOutlined, Visibility } from '@mui/icons-material';
+import { CheckCircleOutline, DeleteForever, PriorityHigh,SearchOutlined, Timer, TimerOutlined, Visibility } from '@mui/icons-material';
 import axios from "axios";
 import { BASE_URL } from "../utils/utils";
 import { useUser } from "../context/AuthContext";
@@ -140,12 +140,17 @@ const filteredTasks = useMemo(() => {
       <div className="flex justify-between flex-wrap gap-4 w-full max-h-[400px]">
         {tasks&& (sortedTasks.length > 0 ? sortedTasks : filteredTasks).map((task) => 
     {
-      const isOverdue = new Date(task.endDate) < currentDate && !task.completed;
-
-      return (
+      const isOverdue = !task.completed&&new Date(task.endDate) < currentDate;
+      const taskEndDate = new Date(task.endDate);
+        taskEndDate.setHours(0, 0, 0, 0);
+        const today = new Date();
+      today.setHours(0, 0, 0, 0); 
+      const alertColor = !task.completed ? taskEndDate < today ? "red" : taskEndDate.getTime() === today.getTime() ? "orange" : "orange"
+      : "default";   
+         return (
         <div key={task.id} className="flex items-center w-full md:w-[48%] justify-between p-4 bg-orange-200 rounded-lg ">
         <div className="flex flex-col">
-          <h3 className="text-lg font-semibold text-gray-800">{task.title} {isOverdue&& <PriorityHigh className="text-red-500"/> }</h3>
+          <h3 className="flex items-center text-lg font-semibold text-gray-800">{task.title}{isOverdue&& <TimerOutlined className={`text-${alertColor}-500`}/> }</h3>
           <p className="text-sm text-gray-600">{task.description}</p>
           <div className="text-sm text-dark-500">
             <span>Start Date: {task.startDate}</span>

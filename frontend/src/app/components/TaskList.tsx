@@ -16,13 +16,17 @@ const TaskList = ({userInfo}) => {
 const [search, setSearch] = useState("")
 const [selectedTask, setSelectedTask] = useState(null);
 const [sortOption, setSortOption] = useState('endDate')
+const [completedFilter, setCompletedFilter] = useState('all')
 const {sortedTasks,setSortedTasks,token,tasks,setTasks} = useUser()
 
 const filteredTasks = useMemo(() => {
   return tasks?.filter((task) => 
-    task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())
-);
-}, [tasks, search]);
+    (task.title.toLowerCase().includes(search.toLowerCase()) || task.description.toLowerCase().includes(search.toLowerCase())) &&
+    (completedFilter === "all" || 
+     (completedFilter === "completed" && task.completed) || 
+     (completedFilter === "not completed" && !task.completed))
+  );
+}, [tasks, search,completedFilter]);
 
     type Task = {
         id: number;
@@ -130,6 +134,19 @@ const filteredTasks = useMemo(() => {
               >
                 <option value="endDate">By Due Date</option>
                 <option value="created">By Created Date</option>
+              </select>
+              <select
+                id="completed"
+                value={completedFilter}
+                onChange={(e) => {
+                  setCompletedFilter(e.target.value);
+        
+                }}
+                className="p-4 px-4 border-none rounded-md bg-orange-200 cursor-pointer"
+              >
+                <option value="all">All</option>
+                <option value="completed">Completed</option>
+                <option value="not completed">Not Completed</option>
               </select>
             </div>
             <div className="flex items-center border-2 border-orange-100" >

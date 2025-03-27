@@ -22,6 +22,7 @@ const config = {
     },
     extend: {
       colors: {
+        primary:"#c5a59f",
         blue: {
           100: '#dae3ef',
           200: '#0c8ce9',

@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { useUser } from "../context/AuthContext";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 const Login = () => {
   const {loading,setloading, setUserInfo: setContextUserInfo } = useUser();
@@ -56,15 +57,13 @@ const Login = () => {
   
   return (
     <div className="flex items-center h-screen">
-        <div className="top">
-            <img className="logo" src='https://assets.stickpng.com/images/580b57fcd9996e24bc43c529.png' />
-        </div>
-        <div className="flex items-center justify-center w-[400px] mx-auto  h-[500px] p-4  bg-orange-100">
+        <div className="flex flex-col items-center justify-center  gap-2 w-[400px] mx-auto shadow-2xl shadow-dark-300 h-[500px] p-4 bg-orange-100">
+        <Image width={50} height={50} className="logo" src='/logo.webp' alt="logo" />
+            <h1>Sign In</h1>
            <form className="flex flex-col gap-4">
-              <h1>Sign In</h1>
               <input className="p-2 border rounded-l" type={"email"} onChange={handleChange} name="email" placeholder="email"/>
               <input className="p-2 border rounded-l" type={"password"} onChange={handleChange} name="password" placeholder="password"/>
-              <button className="py-2 px-4 bg-orange-200 cursor-pointer"  onClick={handleSubmit}>Sign In</button>
+              <button className="py-2 px-4 bg-orange-200 hover:opacity-90  cursor-pointer"  onClick={handleSubmit}>Sign In</button>
               <span>No account?<b><Link href="/register">Sign up now</Link></b> </span>
            </form>
         </div>

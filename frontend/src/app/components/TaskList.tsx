@@ -140,17 +140,16 @@ const filteredTasks = useMemo(() => {
       <div className="flex justify-between flex-wrap gap-4 w-full max-h-[400px]">
         {tasks&& (sortedTasks.length > 0 ? sortedTasks : filteredTasks).map((task) => 
     {
-      const isOverdue = !task.completed&&new Date(task.endDate) < currentDate;
-      const taskEndDate = new Date(task.endDate);
-        taskEndDate.setHours(0, 0, 0, 0);
-        const today = new Date();
+      const today = new Date();
       today.setHours(0, 0, 0, 0); 
-      const alertColor = !task.completed ? taskEndDate < today ? "red" : taskEndDate.getTime() === today.getTime() ? "orange" : "orange"
-      : "default";   
-         return (
+      const taskEndDate = new Date(task.endDate);
+      taskEndDate.setHours(0, 0, 0, 0); 
+      const isOverDue = today>=taskEndDate && !task.completed
+      return (
         <div key={task.id} className="flex items-center w-full md:w-[48%] justify-between p-4 bg-orange-200 rounded-lg ">
         <div className="flex flex-col">
-          <h3 className="flex items-center text-lg font-semibold text-gray-800">{task.title}{isOverdue&& <TimerOutlined className={`text-${alertColor}-500`}/> }</h3>
+          <h3 className="flex items-center text-lg font-semibold text-gray-800">{task.title}{isOverDue&& <TimerOutlined className={`${today>taskEndDate?"text-red-500":"text-orange-400"}`} />}
+          </h3>
           <p className="text-sm text-gray-600">{task.description}</p>
           <div className="text-sm text-dark-500">
             <span>Start Date: {task.startDate}</span>

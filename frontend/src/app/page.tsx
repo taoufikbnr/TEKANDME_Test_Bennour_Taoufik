@@ -8,7 +8,6 @@ import Cookies from 'js-cookie';
 import HomeClient from './components/HomeClient';
 import { toast } from 'react-toastify';
 
-// Define proper types for our state
 interface UserData {
   id: string;
   username: string;
@@ -22,17 +21,14 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const { setUserInfo } = useUser();
 
-  // Get data on component mount
   useEffect(() => {
     const token = Cookies.get('token');
     
-    // This check should be redundant with middleware, but just to be safe
     if (!token) {
       router.push('/login');
       return;
     }
     
-    // Load user data
     const getUserData = async () => {
       try {
         const response = await fetch(`${BASE_URL}/users/me`, {
@@ -62,7 +58,6 @@ export default function HomePage() {
       }
     };
     
-    // Fetch tasks for the user
     const fetchTasks = async (token: string, userId: string) => {
       try {
         const response = await fetch(
@@ -96,7 +91,6 @@ export default function HomePage() {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
-  // Make sure we have a valid token
   const currentToken = Cookies.get('token');
   if (!currentToken) {
     router.push('/login');

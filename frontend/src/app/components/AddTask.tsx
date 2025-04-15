@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { useUser } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import TaskModal from './TaskModal';
-
+import Cookies from 'js-cookie';
 const AddTask = ({userId,date}:any) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -24,8 +24,7 @@ const AddTask = ({userId,date}:any) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-
+    const token =""
     const taskData = {
       data:{  
         userId:userId.toString(),   
@@ -52,7 +51,7 @@ const AddTask = ({userId,date}:any) => {
       setDescription("");
       
       setTasks((prev) => [...prev, response.data.data]);
-    } catch (error) {
+    } catch (error) {      
       error.response?.data.error.details.errors.forEach((error) => toast.error(error.message));
       
     }

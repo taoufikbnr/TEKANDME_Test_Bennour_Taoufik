@@ -6,34 +6,47 @@ import { BASE_URL } from "../utils/utils";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useUser } from "../context/AuthContext";
+import Cookies from "js-cookie";
 
-
-
-const TaskModal = ({ edit,userId, task, onClose }) => {
+const TaskModal = ({ edit, userId, task, onClose }: TaskModalProps) => {
   const [title, setTitle] = useState(task?.title || "");
-  const [description, setDescription] = useState(task?.description || "" );
-  const [startDate, setStartDate] = useState(task?.startDate || new Date());
-  const [endDate, setEndDate] = useState(task?.endDate  || new Date());
+  const [description, setDescription] = useState(task?.description || "");
+  const [startDate, setStartDate] = useState<Date | string>(task?.startDate ? new Date(task.startDate) : new Date());
+  const [endDate, setEndDate] = useState<Date | string>(task?.endDate ? new Date(task.endDate) : new Date());
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { tasks, setTasks } = useUser();
 
   const handleTaskSave = async () => {
-    const token = localStorage.getItem("token");
+    if (!title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const token = Cookies.get("token");
+
+    if (!token) {
+      toast.error("Authentication failed. Please log in again.");
+      setIsSubmitting(false);
+      return;
+    }
 
     const updateTaskData = {
       data: {
         title,
         description,
-        startDate,
-        endDate,
+        startDate: startDate instanceof Date ? startDate.toISOString().split('T')[0] : startDate,
+        endDate: endDate instanceof Date ? endDate.toISOString().split('T')[0] : endDate,
       },
     };
-    const AddTaskData = {
+    
+    const addTaskData = {
       data: {
         userId,
         title,
         description,
-        startDate,
-        endDate,
+        startDate: startDate instanceof Date ? startDate.toISOString().split('T')[0] : startDate,
+        endDate: endDate instanceof Date ? endDate.toISOString().split('T')[0] : endDate,
       },
     };
 
@@ -41,49 +54,63 @@ const TaskModal = ({ edit,userId, task, onClose }) => {
       let response;
       if (edit && task?.documentId) {
         response = await axios.put(
-          `${BASE_URL}/tasks/${task.documentId}`,updateTaskData,{
+          `${BASE_URL}/tasks/${task.documentId}`, updateTaskData, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
         );
-        setTasks((prev) =>prev.map((t) =>t.documentId === task.documentId? { ...t, ...response.data.data }
-              : t
+        
+        // Update local state
+        setTasks((prev) => 
+          prev.map((t) => 
+            t.documentId === task.documentId ? { ...t, ...response.data.data } : t
           )
         );
+        
         toast.success("Task updated successfully!");
       } else {
-        response = await axios.post(`${BASE_URL}/tasks`, AddTaskData, {
+        response = await axios.post(`${BASE_URL}/tasks`, addTaskData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-        setTasks((prev) => [...prev, response.data.data]);
         
+        // Add to local state
+        setTasks((prev) => [...prev, response.data.data]);
         toast.success("Task created successfully!");
       }
-    } catch (error) {
-      console.log(error.response);
       
-      error.response?.data.error.details.errors.forEach((err) =>
-        toast.error(err.message)
-      );
+      onClose();
+    } catch (error: any) {
+      console.error("Error saving task:", error);
+      
+      if (error.response?.data?.error?.details?.errors) {
+        error.response.data.error.details.errors.forEach((err: any) =>
+          toast.error(err.message)
+        );
+      } else {
+        toast.error("Failed to save task. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Update form when task changes
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description);
-      setStartDate(task.startDate);
-      setEndDate(task.endDate);
+      setStartDate(task.startDate ? new Date(task.startDate) : new Date());
+      setEndDate(task.endDate ? new Date(task.endDate) : new Date());
     }
   }, [task]);
 
   return (
-    <Modal open={!!task || edit===false} onClose={onClose} aria-labelledby="task-modal-title">
+    <Modal open={edit === true || edit === false} onClose={onClose} aria-labelledby="task-modal-title">
       <Box
         sx={{
           display: "flex",
@@ -109,6 +136,7 @@ const TaskModal = ({ edit,userId, task, onClose }) => {
           variant="outlined"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
         <TextField
           fullWidth
@@ -116,19 +144,21 @@ const TaskModal = ({ edit,userId, task, onClose }) => {
           variant="outlined"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          multiline
+          rows={3}
         />
         <Box display="flex" gap={2}>
           <DatePicker
-            selected={new Date(startDate)}
-            onChange={(date) => setStartDate(date)}
-            maxDate={new Date(endDate)}
+            selected={startDate instanceof Date ? startDate : new Date(startDate)}
+            onChange={(date: Date) => setStartDate(date)}
+            maxDate={endDate instanceof Date ? endDate : new Date(endDate)}
             dateFormat="yyyy-MM-dd"
             className="border p-2 rounded-md w-full"
           />
           <DatePicker
-            selected={new Date(endDate)}
-            onChange={(date) => setEndDate(date)}
-            minDate={new Date(startDate)}
+            selected={endDate instanceof Date ? endDate : new Date(endDate)}
+            onChange={(date: Date) => setEndDate(date)}
+            minDate={startDate instanceof Date ? startDate : new Date(startDate)}
             dateFormat="yyyy-MM-dd"
             className="border p-2 rounded-md w-full"
           />
@@ -138,8 +168,9 @@ const TaskModal = ({ edit,userId, task, onClose }) => {
           variant="contained"
           color="success"
           sx={{ width: "100%" }}
+          disabled={isSubmitting}
         >
-          {edit ? "Save Changes" : "Create Task"}
+          {isSubmitting ? "Saving..." : (edit ? "Save Changes" : "Create Task")}
         </Button>
       </Box>
     </Modal>

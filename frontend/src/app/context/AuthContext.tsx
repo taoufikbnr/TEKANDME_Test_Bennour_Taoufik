@@ -1,30 +1,46 @@
 "use client"
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-
-
+import Cookies from "js-cookie";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider = ({ children }) => {
+interface UserProviderProps {
+  children: ReactNode;
+}
+
+export const UserProvider = ({ children }: UserProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<{ username: string; email: string; id: string } | null>(null);
-  const [tasks,setTasks] = useState<task[]>([]);
-  const [sortedTasks,setSortedTasks] = useState<task[]>([]);
-  const [loading,setloading] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<task[]>([]);
+  const [sortedTasks, setSortedTasks] = useState<task[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUserInfo = localStorage.getItem("userInfo");
+    const storedToken = Cookies.get("token");
+    const storedUserInfo = Cookies.get("userInfo");
 
     if (storedToken) {
       setToken(storedToken);
     }
 
-    if (!loading&&storedUserInfo) {
+    if (!loading && storedUserInfo) {
       setUserInfo(JSON.parse(storedUserInfo));
     }
-  }, []);
+  }, [loading]);
+  
   return (
-    <UserContext.Provider value={{loading,setloading,tasks, setTasks, token, userInfo, setToken, setUserInfo,sortedTasks,setSortedTasks }}>
+    <UserContext.Provider value={{
+      loading,
+      setLoading,
+      tasks, 
+      setTasks, 
+      token, 
+      userInfo, 
+      setToken, 
+      setUserInfo,
+      sortedTasks,
+      setSortedTasks 
+    }}>
       {children}
     </UserContext.Provider>
   );

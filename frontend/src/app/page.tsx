@@ -1,62 +1,113 @@
 "use client"
-import '@fortawesome/fontawesome-svg-core/styles.css'
-import Image from "next/image";
-import Header from "./components/Header";
-import axios from "axios";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BASE_URL } from "./utils/utils";
-import TaskList from "./components/TaskList";
-import TaskStatus from "./components/TaskStatus";
-import Footer from "./components/Footer";
-import CalendarPicker from './components/DateRangePicker';
-import AddTask from './components/AddTask';
 import { useUser } from './context/AuthContext';
+import Cookies from 'js-cookie';
+import HomeClient from './components/HomeClient';
+import { toast } from 'react-toastify';
 
-export default function Home() {
+// Define proper types for our state
+interface UserData {
+  id: string;
+  username: string;
+  email: string;
+}
 
-  const [date, setDate] = useState([new Date(), new Date()]); 
-  const router = useRouter();    
-  const [userData, setUserData] = useState({})
-  const {loading ,token } = useUser();
+export default function HomePage() {
+  const router = useRouter();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [initialTasks, setInitialTasks] = useState<task[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { setUserInfo } = useUser();
 
-
+  // Get data on component mount
   useEffect(() => {
-    const token =  localStorage.getItem("token")
-    if (!loading && !token) {
-      router.push('/login'); 
-    } else {
-     const fetchUserInfo = async () => {
-        try {
-          const response = await axios.get(`${BASE_URL}/users/me`, {
+    const token = Cookies.get('token');
+    
+    // This check should be redundant with middleware, but just to be safe
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+    
+    // Load user data
+    const getUserData = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          cache: 'no-store'
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
+        const data = await response.json();
+        setUserData(data);
+        setUserInfo({ 
+          username: data.username, 
+          email: data.email, 
+          id: data.id 
+        });
+        
+        fetchTasks(token, data.id);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        toast.error("Failed to load user data. Please try logging in again.");
+        router.push('/login');
+      }
+    };
+    
+    // Fetch tasks for the user
+    const fetchTasks = async (token: string, userId: string) => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/tasks?&[filters][userId][$eq]=${userId}`,
+          {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          });
-          setUserData(response.data);
-        } catch (err) {
-          console.error(err);
+            cache: 'no-store'
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch tasks');
         }
-      };
-      fetchUserInfo();
-    }    
+        
+        const data = await response.json();
+        setInitialTasks(data.data || []);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        toast.error("Failed to load tasks");
+        setIsLoading(false);
+      }
+    };
     
-  }, [token, router]); 
-  if(loading) return (<div>Loading...</div>)
-  return (
-    <div className="flex flex-col gap-4 mx-2 md:mx-15">
-      <h1 className="text-3xl text-center mx-auto mt-3"><span className="font-bold">Hello,{userData?.username}, </span><span>Start planning today</span> </h1>
-      <div className="flex max-h-[400px] overflow-auto">
-          <div className="w-[40%] hidden md:block">
-            <CalendarPicker date={date} setDate={setDate}/> 
-            </div>
-          <div className="flex flex-col gap-4 w-full">
-            <AddTask  userId={userData?.id}   date={date}/>
-            <TaskList userInfo={userData} />
-          </div>
-      </div>
+    getUserData();
+  }, [router, setUserInfo]);
 
-      <TaskStatus/>
-    </div>
+  if (isLoading || !userData) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
+  // Make sure we have a valid token
+  const currentToken = Cookies.get('token');
+  if (!currentToken) {
+    router.push('/login');
+    return null;
+  }
+
+  return (
+    <HomeClient 
+      userData={userData} 
+      token={currentToken} 
+      initialTasks={initialTasks} 
+    />
   );
 }
